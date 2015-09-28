@@ -26,6 +26,8 @@ TweetDbName = config.get('Twitter', 'DbName', 0)
 ReweetDbName = config.get('Twitter', 'ReweetDbName', 0)
 Filter = config.get('Twitter', 'Filter', 0)
 UserIds = config.get('Twitter', 'UserIds', 0)
+languages = config.get('Twitter', 'Languages', 0)
+
 
 Tweetdb = CouchDbServer.create_db(TweetDbName)
 ReTweetdb = CouchDbServer.create_db(ReweetDbName)
@@ -36,6 +38,11 @@ class listener(StreamListener):
         
         doc = json.loads(data)
         
+        if('lang' in doc):
+            if(doc['lang'] not in languages):
+                print "Tweet not in specified languages. %s" % doc['text']
+                return(True)
+            
         if(options.skip_retweets):
             print "This is a retweet so skipping. %s" %  doc['text']
             return(True)
