@@ -4,6 +4,14 @@ from tweepy.streaming import StreamListener
 import ConfigParser
 from couchdbkit import Server
 import json
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option("-s","--skip_retweets",default=False,
+                  help="Ignore Retweets")
+
+(options, args) = parser.parse_args()
+
 
 CouchDbServer = Server()
 
@@ -15,16 +23,31 @@ ConsumerSecret = config.get('Twitter', 'ConsumerSecret', 0)
 AccessToken = config.get('Twitter', 'AccessToken', 0)
 AccessSecret = config.get('Twitter', 'AccessSecret', 0)
 TweetDbName = config.get('Twitter', 'DbName', 0)
+ReweetDbName = config.get('Twitter', 'ReweetDbName', 0)
 Filter = config.get('Twitter', 'Filter', 0)
 UserIds = config.get('Twitter', 'UserIds', 0)
 
-db = CouchDbServer.create_db(TweetDbName)
+Tweetdb = CouchDbServer.create_db(TweetDbName)
+ReTweetdb = CouchDbServer.create_db(ReweetDbName)
 
 class listener(StreamListener):
     
     def on_data(self, data):
-        db.save_doc(json.loads(data))
-        return(True)
+        
+        doc = json.loads(data)
+        
+        if(options.skip_retweets):
+            print "This is a retweet so skipping. %s" %  doc['text']
+            return(True)
+        else:
+            if('retweeted_status' in doc):
+                print "Saving ReTweet. %s" % doc['text']
+                ReTweetdb.save_doc(json.loads(data))
+                return(True)
+            else:
+                print "Saving Tweet. %s" % doc['text']
+                Tweetdb.save_doc(json.loads(data))
+                return(True)
 
     def on_error(self, status):
         print status
