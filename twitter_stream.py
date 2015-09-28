@@ -32,29 +32,37 @@ languages = config.get('Twitter', 'Languages', 0)
 Tweetdb = CouchDbServer.create_db(TweetDbName)
 ReTweetdb = CouchDbServer.create_db(ReweetDbName)
 
+def red(name): print ("\033[91m {}\033[00m" .format(name))
+def green(name): print ("\033[92m {}\033[00m" .format(name))
+def yellow(name): print ("\033[93m {}\033[00m" .format(name))
+
 class listener(StreamListener):
     
     def on_data(self, data):
-        
         doc = json.loads(data)
         
-        if('lang' in doc):
-            if(doc['lang'] not in languages):
-                print "Tweet not in specified languages. %s" % doc['text']
-                return(True)
-            
-        if(options.skip_retweets):
-            print "This is a retweet so skipping. %s" %  doc['text']
-            return(True)
-        else:
-            if('retweeted_status' in doc):
-                print "Saving ReTweet. %s" % doc['text']
-                ReTweetdb.save_doc(json.loads(data))
+        if('text' in doc) :
+            if('lang' in doc):
+                if(doc['lang'] not in languages):
+                    red("Tweet not in specified languages.")
+                    print " %s" % doc['text']
+                    return(True)
+                
+            if(options.skip_retweets):
+                yellow("This is a retweet so skipping.")
+                print "%s" %  doc['text']
                 return(True)
             else:
-                print "Saving Tweet. %s" % doc['text']
-                Tweetdb.save_doc(json.loads(data))
-                return(True)
+                if('retweeted_status' in doc):
+                    green("Saving ReTweet. ")
+                    print "%s" % doc['text']
+                    ReTweetdb.save_doc(json.loads(data))
+                    return(True)
+                else:
+                    green("Saving Tweet.")
+                    print " %s" % doc['text']
+                    Tweetdb.save_doc(json.loads(data))
+                    return(True)
 
     def on_error(self, status):
         print status
