@@ -68,12 +68,12 @@ class listener(StreamListener):
                 if('retweeted_status' in doc):
                     green("Saving ReTweet. ")
                     print "%s" % doc['text']
-                    ReTweetdb.save_doc(json.loads(data))
+                    ReTweetdb.save_doc(doc)
                     return(True)
                 else:
                     green("Saving Tweet.")
                     print " %s" % doc['text']
-                    Tweetdb.save_doc(json.loads(data))
+                    Tweetdb.save_doc(doc)
                     return(True)
 
     def on_error(self, status):
