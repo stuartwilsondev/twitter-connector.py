@@ -33,13 +33,13 @@ Tweetdb = CouchDbServer.create_db(TweetDbName)
 ReTweetdb = CouchDbServer.create_db(ReweetDbName)
 
 #Print Red
-def red(name): print ("\033[91m {}\033[00m" .format(name))
+def print_red(name): print ("\033[91m {}\033[00m" .format(name))
 
 #Print Green
-def green(name): print ("\033[92m {}\033[00m" .format(name))
+def print_green(name): print ("\033[92m {}\033[00m" .format(name))
 
 #PRint Yellow
-def yellow(name): print ("\033[93m {}\033[00m" .format(name))
+def print_yellow(name): print ("\033[93m {}\033[00m" .format(name))
 
 class listener(StreamListener):
     
@@ -55,23 +55,23 @@ class listener(StreamListener):
                 
                 if(doc['lang'] not in Languages):
                     #Skip
-                    red("Tweet not in specified languages.")
+                    print_red("Tweet not in specified languages.")
                     print " %s" % doc['text']
                     return(True)
                 
             #Check if we want ReTweets
             if(options.skip_retweets):
-                yellow("This is a retweet so skipping.")
+                print_yellow("This is a retweet so skipping.")
                 print "%s" %  doc['text']
                 return(True)
             else:
                 if('retweeted_status' in doc):
-                    green("Saving ReTweet. ")
+                    print_green("Saving ReTweet. ")
                     print "%s" % doc['text']
                     ReTweetdb.save_doc(doc)
                     return(True)
                 else:
-                    green("Saving Tweet.")
+                    print_green("Saving Tweet.")
                     print " %s" % doc['text']
                     Tweetdb.save_doc(doc)
                     return(True)
