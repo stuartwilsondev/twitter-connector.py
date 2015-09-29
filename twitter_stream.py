@@ -33,13 +33,13 @@ Tweetdb = CouchDbServer.create_db(TweetDbName)
 ReTweetdb = CouchDbServer.create_db(ReweetDbName)
 
 #Print Red
-def print_red(name): print ("\033[91m {}\033[00m" .format(name))
+def print_red(text): print ("\033[91m {}\033[00m" .format(name))
 
 #Print Green
-def print_green(name): print ("\033[92m {}\033[00m" .format(name))
+def print_green(text): print ("\033[92m {}\033[00m" .format(name))
 
 #PRint Yellow
-def print_yellow(name): print ("\033[93m {}\033[00m" .format(name))
+def print_yellow(text): print ("\033[93m {}\033[00m" .format(name))
 
 class listener(StreamListener):
     
