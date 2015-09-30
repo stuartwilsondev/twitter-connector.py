@@ -13,6 +13,9 @@ import time
 authenticate("localhost:7474", "neo4j", "pa55word")
 graph = Graph()
 
+# clear database
+#graph_db.clear()
+   
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
