@@ -2,21 +2,12 @@ from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
 import ConfigParser
-from couchdbkit import Server
 import json
 from optparse import OptionParser
 from py2neo import Graph, authenticate
 
 authenticate("localhost:7474", "neo4j", "pa55word")
 graph = Graph()
-
-parser = OptionParser()
-parser.add_option("-s","--skip_retweets",default=False,
-                  help="Ignore Retweets")
-
-(options, args) = parser.parse_args()
-
-CouchDbServer = Server()
 
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
@@ -31,10 +22,6 @@ ReweetDbName = config.get('Twitter', 'ReweetDbName', 0)
 Filter = config.get('Twitter', 'Filter', 0)
 UserIds = config.get('Twitter', 'UserIds', 0)
 Languages = config.get('Twitter', 'Languages', 0)
-
-
-Tweetdb = CouchDbServer.create_db(TweetDbName)
-ReTweetdb = CouchDbServer.create_db(ReweetDbName)
 
 #Print Red
 def print_red(text): print ("\033[91m {}\033[00m" .format(text))
