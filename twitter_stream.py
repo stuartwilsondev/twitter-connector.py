@@ -66,7 +66,7 @@ class listener(StreamListener):
                 return(True)
             else:
                 if('retweeted_status' in doc):
-                    print_green("Saving ReTweet. ")
+                    print_green("Saving ReTweet.")
                     print "%s" % doc['text']
                     ReTweetdb.save_doc(doc)
                     return(True)
