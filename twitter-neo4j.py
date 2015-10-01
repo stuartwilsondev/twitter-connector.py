@@ -9,13 +9,6 @@ from httplib import IncompleteRead
 from requests.packages.urllib3.exceptions import ProtocolError
 import time
 
-
-authenticate("localhost:7474", "neo4j", "pa55word")
-graph = Graph()
-
-# clear database
-#graph_db.clear()
-   
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
@@ -29,6 +22,17 @@ ReweetDbName = config.get('Twitter', 'ReweetDbName', 0)
 Filter = config.get('Twitter', 'Filter', 0)
 UserIds = config.get('Twitter', 'UserIds', 0)
 Languages = config.get('Twitter', 'Languages', 0)
+Neo4JUrl = config.get('Neo4J', 'Url', 0)
+Neo4JUser = config.get('Neo4J', 'User', 0)
+Neo4JPass = config.get('Neo4J', 'Pass', 0)
+
+
+authenticate(Neo4JUrl, Neo4JUser, Neo4JPass)
+graph = Graph()
+
+# clear database
+#graph_db.clear()
+   
 
 #Print Red
 def print_red(text): print ("\033[91m {}\033[00m" .format(text))
@@ -102,9 +106,6 @@ class listener(StreamListener):
         else:
             print_red("Tweet doesn't contain data needed")
         
-       
-            
-        
     def on_error(self, status):
         #Print http status code
         print status
@@ -118,7 +119,7 @@ while True:
         twitterStream.filter(track=[Filter], follow=[UserIds])
         
     except IncompleteRead:
-        print_red("IncompleteRead caught. Waiting......")
+        print_red("IncompleteRead caught.")
         continue
     except ProtocolError:
         print_red("Protocol Error caught. Waiting......")
