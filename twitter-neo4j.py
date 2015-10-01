@@ -8,9 +8,12 @@ from py2neo import Graph, authenticate
 from httplib import IncompleteRead
 from requests.packages.urllib3.exceptions import ProtocolError
 import time
+import os
 
+ConfigFile =  os.path.join(os.path.dirname(__file__),'config.ini')
 config = ConfigParser.ConfigParser()
-config.read('config.ini')
+config.read(ConfigFile)
+
 
 #Config
 ConsumerKey = config.get('Twitter', 'ConsumerKey', 0)
@@ -31,7 +34,7 @@ authenticate(Neo4JUrl, Neo4JUser, Neo4JPass)
 graph = Graph()
 
 # clear database
-#graph_db.clear()
+#graph.delete_all()
    
 
 #Print Red
