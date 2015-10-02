@@ -65,14 +65,20 @@ class listener(StreamListener):
             MERGE (tweet:Tweet {id:t.id})
             SET tweet.text = t.text,
                 tweet.created_at = t.created_at,
-                tweet.favorites = t.favorite_count
+                tweet.favorites = t.favorite_count,
+                tweet.retweeted_count = t.retweeted_count
             MERGE (user:User {screen_name:u.screen_name})
-            SET user.name = u.name,
+            SET
+                user.id = u.id,
+                user.name = u.name,
                 user.location = u.location,
                 user.followers = u.followers_count,
                 user.following = u.friends_count,
                 user.statuses = u.statusus_count,
-                user.profile_image_url = u.profile_image_url
+                user.profile_image_url = u.profile_image_url,
+                user.verified = u.verified,
+                user.listed_count = u.listed_count,
+                user.favourites_count = u.favourites_count
             MERGE (user)-[:POSTS]->(tweet)
             MERGE (source:Source {name:t.source})
             MERGE (tweet)-[:USING]->(source)
