@@ -10,10 +10,25 @@ from requests.packages.urllib3.exceptions import ProtocolError
 import time
 import os
 
+parser = OptionParser()
+parser.add_option("-c", "--clear",
+                  dest="clear", action="store_true",
+                  help="Clear the Graph")
+
+(options, args) = parser.parse_args()
+
 ConfigFile =  os.path.join(os.path.dirname(__file__),'config.ini')
 config = ConfigParser.ConfigParser()
 config.read(ConfigFile)
 
+#Print Red
+def print_red(text): print ("\033[91m {}\033[00m" .format(text))
+
+#Print Green
+def print_green(text): print ("\033[92m {}\033[00m" .format(text))
+
+#Print Yellow
+def print_yellow(text): print ("\033[93m {}\033[00m" .format(text))
 
 #Config
 ConsumerKey = config.get('Twitter', 'ConsumerKey', 0)
@@ -29,22 +44,13 @@ Neo4JUrl = config.get('Neo4J', 'Url', 0)
 Neo4JUser = config.get('Neo4J', 'User', 0)
 Neo4JPass = config.get('Neo4J', 'Pass', 0)
 
-
 authenticate(Neo4JUrl, Neo4JUser, Neo4JPass)
 graph = Graph()
 
 # clear database
-#graph.delete_all()
-   
-
-#Print Red
-def print_red(text): print ("\033[91m {}\033[00m" .format(text))
-
-#Print Green
-def print_green(text): print ("\033[92m {}\033[00m" .format(text))
-
-#Print Yellow
-def print_yellow(text): print ("\033[93m {}\033[00m" .format(text))
+if options.clear is True:
+    print_red("Clearing Graph...")
+    graph.delete_all()
 
 class listener(StreamListener):
     
